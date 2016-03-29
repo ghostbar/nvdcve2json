@@ -5,6 +5,15 @@ Pipe-able parser from XML to JSON of the nvdcve list.
 
 HOW DO I USE IT?
 ----------------
+First, install it with:
+
+    git clone github.com/ghostbar/nvdcve2json
+    cd nvdcve2json/
+    glide install
+    go build
+
+Then, just run it like:
+
 
     ./nvdcve2json < nvdcve-2.0-2016.xml
 
@@ -14,6 +23,11 @@ HOW DO I USE IT?
     ./nvdcve2json --input nvdcve-2.0-2016.xml
 
     ./nvdcve2json --input nvdcve-2.0-2016.xml > nvdcve-2.0-2016.json
+
+More help can be found on `./nvdcve2json --help`.
+
+**NOTE**: filtering is not working yet, that'll be `v1.0.0` and work on it is on
+the `devel` branch.
 
 AUTHOR AND LICENSE
 ------------------
