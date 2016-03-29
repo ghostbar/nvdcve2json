@@ -24,8 +24,19 @@ Options:
   --version     	Show version.
 `
 
+type FactRef struct {
+	Name string `xml:"name,attr"`
+}
+
+type LogicalTest struct {
+	Operator    string        `xml:"operator,attr"`
+	Negate      string        `xml:"negate,attr"`
+	FactRef     []FactRef     `xml:"fact-ref"`
+	LogicalTest []LogicalTest `xml:"logical-test"`
+}
+
 type VulnerableConfiguration struct {
-	Id string `xml:"id"`
+	LogicalTest []LogicalTest `xml:"logical-test"`
 }
 
 type VulnerableSoftwareList struct {
