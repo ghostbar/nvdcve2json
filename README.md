@@ -15,9 +15,6 @@ HOW DO I USE IT?
 
     ./nvdcve2json --input nvdcve-2.0-2016.xml > nvdcve-2.0-2016.json
 
-NOTES ABOUT THE OUTPUT FLAG
----------------------------
-
 AUTHOR AND LICENSE
 ------------------
 © Jose-Luis Rivas `<me@ghostbar.co>`.
