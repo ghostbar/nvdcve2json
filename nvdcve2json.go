@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-const version = "nvdcve2json 0.2.0"
+const version = "nvdcve2json 1.0.0"
 const usage = `nvdcve2json.
 
 Usage:
