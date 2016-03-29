@@ -56,14 +56,14 @@ type Entry struct {
 
 func writeDecoded(args map[string]interface{}, decoded Entry) {
 	entry, _ := json.Marshal(decoded)
-	if args["--output"] == nil {
-		os.Stdout.Write(entry)
-	}
+	os.Stdout.Write(entry)
 }
 
 func decodeXML(args map[string]interface{}, input *os.File) {
 	decoder := xml.NewDecoder(input)
 	var inElement string
+	var initial bool = true
+	os.Stdout.WriteString("[")
 
 	for {
 		t, _ := decoder.Token()
@@ -77,10 +77,16 @@ func decodeXML(args map[string]interface{}, input *os.File) {
 			if inElement == "entry" {
 				var entry Entry
 				decoder.DecodeElement(&entry, &se)
+				if !initial {
+					os.Stdout.WriteString(",")
+				} else {
+					initial = false
+				}
 				writeDecoded(args, entry)
 			}
 		}
 	}
+	os.Stdout.WriteString("]")
 }
 
 func main() {
