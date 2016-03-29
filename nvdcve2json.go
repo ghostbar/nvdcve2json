@@ -9,7 +9,7 @@ import (
 	"regexp"
 )
 
-const version = "nvdcve2json 1.0.0"
+const version = "nvdcve2json 1.0.1"
 const usage = `nvdcve2json.
 
 Usage:
@@ -100,6 +100,13 @@ func filterVulnConfs(filter string, vulnConfs []VulnerableConfiguration) (matche
 	return false // if none matched
 }
 
+func writeComma(initial bool) (alwaysFalse bool) {
+	if !initial {
+		os.Stdout.WriteString(",")
+	}
+	return false
+}
+
 func decodeXML(args map[string]interface{}, input *os.File) {
 	decoder := xml.NewDecoder(input)
 	var inElement string
@@ -120,19 +127,17 @@ func decodeXML(args map[string]interface{}, input *os.File) {
 			if inElement == "entry" {
 				var entry Entry
 				decoder.DecodeElement(&entry, &se)
-				if !initial {
-					os.Stdout.WriteString(",")
-				} else {
-					initial = false
-				}
+
 				if len(filters) != 0 {
 					for _, filter := range filters {
 						if filterVulnConfs(filter, entry.VulnerableConfiguration) {
+							initial = writeComma(initial)
 							writeDecoded(args, entry)
 							break
 						}
 					}
 				} else {
+					initial = writeComma(initial)
 					writeDecoded(args, entry)
 				}
 			}
