@@ -13,17 +13,15 @@ const usage = `nvdcve2json.
 
 Usage:
   nvdcve2json [--filter "cpe:/o:apple:iphone_os" --filter "cpe:/o:google:android"]
-              [--input FILE | -i FILE] [--output FILE | -o FILE]
+              [--input FILE | -i FILE]
   nvdcve2json -h | --help
   nvdcve2json --version
 
 Options:
   --filter <string>	Filters by the given string on the cpe fields (can take multiple).
   -i --input FILE	Input XML file for the nvd's CVEs, defaults to stdin.
-  -o --output FILE	Output file for the resulting JSON, defaults to stdout.
   -h --help     	Show this screen.
   --version     	Show version.
-
 `
 
 type VulnerableConfiguration struct {
