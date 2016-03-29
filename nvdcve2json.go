@@ -109,7 +109,6 @@ func writeComma(initial bool) (alwaysFalse bool) {
 
 func decodeXML(args map[string]interface{}, input *os.File) {
 	decoder := xml.NewDecoder(input)
-	var inElement string
 	var initial bool = true
 	filters := args["--filter"].([]string)
 
@@ -123,8 +122,7 @@ func decodeXML(args map[string]interface{}, input *os.File) {
 
 		switch se := t.(type) {
 		case xml.StartElement:
-			inElement = se.Name.Local
-			if inElement == "entry" {
+			if se.Name.Local == "entry" {
 				var entry Entry
 				decoder.DecodeElement(&entry, &se)
 
