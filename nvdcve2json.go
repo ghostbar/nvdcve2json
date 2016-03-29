@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"os"
+	"regexp"
 )
 
 const version = "nvdcve2json 1.0.0"
@@ -70,10 +71,41 @@ func writeDecoded(args map[string]interface{}, decoded Entry) {
 	os.Stdout.Write(entry)
 }
 
+func matchesFilter(filter *regexp.Regexp, logicTests []LogicalTest) (matches bool) {
+	for _, logicTest := range logicTests {
+		if logicTest.Negate == "false" {
+			if logicTest.FactRef != nil {
+				for _, product := range logicTest.FactRef {
+					if filter.MatchString(product.Name) {
+						return true
+					}
+				}
+			} else {
+				return matchesFilter(filter, logicTest.LogicalTest)
+			}
+		}
+	}
+
+	return false
+}
+
+func filterVulnConfs(filter string, vulnConfs []VulnerableConfiguration) (matches bool) {
+	match := regexp.MustCompile(filter)
+	for _, vulnConf := range vulnConfs {
+		if matchesFilter(match, vulnConf.LogicalTest) {
+			return true
+		}
+	}
+
+	return false // if none matched
+}
+
 func decodeXML(args map[string]interface{}, input *os.File) {
 	decoder := xml.NewDecoder(input)
 	var inElement string
 	var initial bool = true
+	filters := args["--filter"].([]string)
+
 	os.Stdout.WriteString("[")
 
 	for {
@@ -93,10 +125,20 @@ func decodeXML(args map[string]interface{}, input *os.File) {
 				} else {
 					initial = false
 				}
-				writeDecoded(args, entry)
+				if len(filters) != 0 {
+					for _, filter := range filters {
+						if filterVulnConfs(filter, entry.VulnerableConfiguration) {
+							writeDecoded(args, entry)
+							break
+						}
+					}
+				} else {
+					writeDecoded(args, entry)
+				}
 			}
 		}
 	}
+
 	os.Stdout.WriteString("]")
 }
 
