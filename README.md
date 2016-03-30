@@ -9,6 +9,9 @@ First, install it with:
 
     go get github.com/ghostbar/nvdcve2json
 
+Or just go to the [releases](https://github.com/ghostbar/nvdcve2json/releases)
+page and download the binary for your system.
+
 Then, just run it like:
 
 
