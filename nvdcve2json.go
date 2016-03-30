@@ -9,11 +9,11 @@ import (
 	"regexp"
 )
 
-const version = "nvdcve2json 1.0.1"
+const version = "nvdcve2json 1.0.2"
 const usage = `nvdcve2json.
 
 Usage:
-  nvdcve2json [--filter "cpe:/o:apple:iphone_os" --filter "cpe:/o:google:android"]
+  nvdcve2json [--filter "cpe:/o:apple:iphone_os" --filter "cpe:/o:google:android"...]
               [--input FILE | -i FILE]
   nvdcve2json -h | --help
   nvdcve2json --version
