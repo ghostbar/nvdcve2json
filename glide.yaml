@@ -1,6 +1,0 @@
-package: github.com/ghostbar/nvdcve2json
-import:
-- package: github.com/docopt/docopt.go
-  vcs: git
-  version: ^0.6.2
-  repo: git@github.com:docopt/docopt.go
