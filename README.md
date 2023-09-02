@@ -1,6 +1,8 @@
 nvdcve2json
 ===========
 
+**DISCONTINUED**: Since October 16th, 2019, the NVD discontinued support for XML Data Feeds. You can [read more here](https://nvd.nist.gov/General/News/XML-Vulnerability-Feed-Retirement). There are JSON data feeds available that are going to be discontinued by the end of 2023. They recommend to use their API instead.
+
 Pipe-able parser from XML to JSON of the nvdcve list.
 
 HOW DO I USE IT?
