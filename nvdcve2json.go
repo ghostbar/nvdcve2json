@@ -1,29 +1,11 @@
 package main
 
 import (
-	"github.com/docopt/docopt-go"
-
 	"encoding/json"
 	"encoding/xml"
 	"os"
 	"regexp"
 )
-
-const version = "nvdcve2json 1.0.2"
-const usage = `nvdcve2json.
-
-Usage:
-  nvdcve2json [--filter "cpe:/o:apple:iphone_os" --filter "cpe:/o:google:android"...]
-              [--input FILE | -i FILE]
-  nvdcve2json -h | --help
-  nvdcve2json --version
-
-Options:
-  --filter <string>	Filters by the given string on the cpe fields (can take multiple).
-  -i --input FILE	Input XML file for the nvd's CVEs, defaults to stdin.
-  -h --help     	Show this screen.
-  --version     	Show version.
-`
 
 type FactRef struct {
 	Name string `xml:"name,attr"`
@@ -66,7 +48,7 @@ type Entry struct {
 	VulnerableSoftwareList  VulnerableSoftwareList    `xml:"vulnerable-software-list"`
 }
 
-func writeDecoded(args map[string]interface{}, decoded Entry) {
+func writeDecoded(decoded Entry) {
 	entry, _ := json.Marshal(decoded)
 	os.Stdout.Write(entry)
 }
@@ -107,10 +89,9 @@ func writeComma(initial bool) (alwaysFalse bool) {
 	return false
 }
 
-func decodeXML(args map[string]interface{}, input *os.File) {
+func decodeXML(filters []string, input *os.File) {
 	decoder := xml.NewDecoder(input)
 	var initial bool = true
-	filters := args["--filter"].([]string)
 
 	os.Stdout.WriteString("[")
 
@@ -130,35 +111,17 @@ func decodeXML(args map[string]interface{}, input *os.File) {
 					for _, filter := range filters {
 						if filterVulnConfs(filter, entry.VulnerableConfiguration) {
 							initial = writeComma(initial)
-							writeDecoded(args, entry)
+							writeDecoded(entry)
 							break
 						}
 					}
 				} else {
 					initial = writeComma(initial)
-					writeDecoded(args, entry)
+					writeDecoded(entry)
 				}
 			}
 		}
 	}
 
 	os.Stdout.WriteString("]")
-}
-
-func main() {
-	args, _ := docopt.Parse(usage, nil, true, version, false)
-
-	if args["--input"] != nil {
-		inputArg, _ := args["--input"].(string)
-
-		input, err := os.Open(inputArg)
-		if err != nil {
-			panic(err)
-		}
-		defer input.Close()
-		decodeXML(args, input)
-	} else {
-		input := os.Stdin
-		decodeXML(args, input)
-	}
 }
